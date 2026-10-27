@@ -1,0 +1,16 @@
+{
+  "name": "@rankkiln/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pipeline (topic, brief, draft, lint, repair, render) and the Post and SiteProfile schemas.",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@rankkiln/llm",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Model provider interface and the Anthropic implementation.",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  }
+}

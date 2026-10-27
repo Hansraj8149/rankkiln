@@ -1,0 +1,13 @@
+{
+  "name": "@rankkiln/cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Self-hosted command line: rankkiln draft | run | topics.",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  }
+}

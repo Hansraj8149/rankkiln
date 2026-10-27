@@ -1,0 +1,16 @@
+{
+  "name": "@rankkiln/topics",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Topic sources (Search Console, autocomplete, sitemap, manual) and scoring.",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@rankkiln/core": "workspace:*"
+  }
+}

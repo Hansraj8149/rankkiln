@@ -1,0 +1,13 @@
+{
+  "name": "@rankkiln/worker",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Hosted multi-tenant API, cron and queue consumer (Cloudflare Workers).",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  }
+}
