@@ -1,0 +1,21 @@
+{
+  "name": "@rankkiln/engine",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Runs one draft end to end: brief, draft, checks, repair, delivery.",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@rankkiln/connectors": "workspace:*",
+    "@rankkiln/core": "workspace:*",
+    "@rankkiln/lint": "workspace:*",
+    "@rankkiln/llm": "workspace:*",
+    "@rankkiln/topics": "workspace:*",
+    "zod": "^4.6.7"
+  }
+}

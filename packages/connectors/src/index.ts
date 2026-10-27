@@ -23,3 +23,6 @@ export interface Connector {
   createDraft(post: Post): Promise<DraftRef>;
   publish(ref: DraftRef): Promise<void>;
 }
+
+export { renderMarkdown } from "./markdown";
+export { WebhookConnector, type WebhookConfig } from "./webhook";

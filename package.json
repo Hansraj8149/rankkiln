@@ -10,7 +10,8 @@
     "typecheck": "turbo run typecheck",
     "test": "vitest run",
     "format": "prettier -w .",
-    "format:check": "prettier -c ."
+    "format:check": "prettier -c .",
+    "rankkiln": "tsx apps/cli/src/index.ts"
   },
   "packageManager": "pnpm@10.29.2",
   "engines": {
@@ -18,11 +19,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.5",
     "eslint": "^10.13.0",
     "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
     "turbo": "^2.11.10",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.72.1",
-    "vitest": "^5.0.5"
+    "vitest": "^5.0.5",
+    "@rankkiln/engine": "workspace:*"
   }
 }

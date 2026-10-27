@@ -19,7 +19,34 @@ export function words(post: Post): number {
   return n;
 }
 
-export function lint(post: Post, site: Pick<SiteProfile, "titleSuffix" | "voice">): LintIssue[] {
+const LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+
+/** Every [text](href) in the post's text. */
+export function links(post: Post): string[] {
+  const out: string[] = [];
+  for (const b of post.blocks) {
+    const parts = "text" in b ? [b.text] : b.type === "list" ? b.items : [];
+    for (const p of parts) for (const m of p.matchAll(LINK)) out.push(m[2]!);
+    if (b.type === "cta") out.push(b.href);
+  }
+  return out;
+}
+
+const normalPath = (p: string) => (p.length > 1 ? p.replace(/\/+$/, "") : p);
+
+export interface LintOptions {
+  /** Paths of the site's real pages. When given, internal links are checked against it. */
+  knownPaths?: Iterable<string>;
+  /** The site's origin, so absolute links to it count as internal. */
+  siteUrl?: string;
+  minInternalLinks?: number;
+}
+
+export function lint(
+  post: Post,
+  site: Pick<SiteProfile, "titleSuffix" | "voice">,
+  opts: LintOptions = {},
+): LintIssue[] {
   const issues: LintIssue[] = [];
   const err = (rule: string, message: string) => issues.push({ rule, message, severity: "error" });
   const warn = (rule: string, message: string) => issues.push({ rule, message, severity: "warning" });
@@ -45,6 +72,23 @@ export function lint(post: Post, site: Pick<SiteProfile, "titleSuffix" | "voice"
   for (const w of site.voice.bannedWords) {
     if (new RegExp(`\\b${w.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(all))
       err("banned-word", `Uses a banned word: "${w}".`);
+  }
+
+  if (opts.knownPaths) {
+    const known = new Set([...opts.knownPaths].map(normalPath));
+    const origin = opts.siteUrl ? new URL(opts.siteUrl).origin : null;
+    let internal = 0;
+    for (const href of links(post)) {
+      let path: string | null = null;
+      if (href.startsWith("/")) path = href;
+      else if (origin && href.startsWith(origin)) path = new URL(href).pathname;
+      if (path === null) continue;
+      internal++;
+      const bare = normalPath(path.split(/[?#]/)[0]!);
+      if (!known.has(bare)) err("broken-internal-link", `Links to ${path}, which isn't a page on the site.`);
+    }
+    const min = opts.minInternalLinks ?? 3;
+    if (internal < min) warn("few-internal-links", `${internal} internal links (aim for ${min}+).`);
   }
 
   if (post.claimsToVerify.length === 0) warn("claims-list", "No claims to verify were listed; check facts by hand.");

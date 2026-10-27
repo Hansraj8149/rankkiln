@@ -30,6 +30,19 @@ switch auto-publish on.
 | `apps/web`            | Dashboard and marketing site                                    |
 | `apps/cli`            | Self-hosted command line                                        |
 
+## Try it (self-hosted)
+
+```bash
+pnpm install
+cp .env.example .env                                  # set ANTHROPIC_API_KEY
+cp rankkiln.config.example.ts rankkiln.config.ts      # describe your site
+pnpm rankkiln sites
+pnpm rankkiln draft --site acme --topic "how far an e-bike goes on one charge" --dry-run
+```
+
+The draft is saved to `out/<site>/<slug>.md` (and `.json` with the brief and checks). Without `--dry-run`, it is also
+sent to the site's `target` as an unpublished draft.
+
 ## Develop
 
 ```bash

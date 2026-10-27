@@ -36,6 +36,20 @@ describe("lint", () => {
     expect(lint(ok, site).some((i) => i.rule === "banned-word")).toBe(false);
   });
 
+  it("flags internal links to pages that don't exist, including absolute ones", () => {
+    const post = {
+      ...base,
+      blocks: [
+        { type: "paragraph" as const, text: "See [audit](/audit/) and [old](/gone) and [abs](https://acme.com/nope)." },
+      ],
+    };
+    const issues = lint(post, site, { knownPaths: ["/audit"], siteUrl: "https://acme.com" });
+    expect(issues.filter((i) => i.rule === "broken-internal-link").map((i) => i.message)).toEqual([
+      "Links to /gone, which isn't a page on the site.",
+      "Links to /nope, which isn't a page on the site.",
+    ]);
+  });
+
   it("has no errors for a clean post", () => {
     expect(lint(base, site).filter((i) => i.severity === "error")).toEqual([]);
   });

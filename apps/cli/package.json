@@ -2,12 +2,21 @@
   "name": "@rankkiln/cli",
   "version": "0.0.0",
   "private": true,
-  "description": "Self-hosted command line: rankkiln draft | run | topics.",
+  "description": "Self-hosted command line: rankkiln draft | sites.",
   "license": "AGPL-3.0-only",
   "type": "module",
+  "bin": {
+    "rankkiln": "src/index.ts"
+  },
   "main": "src/index.ts",
-  "types": "src/index.ts",
   "scripts": {
     "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@rankkiln/connectors": "workspace:*",
+    "@rankkiln/core": "workspace:*",
+    "@rankkiln/engine": "workspace:*",
+    "@rankkiln/llm": "workspace:*",
+    "@rankkiln/topics": "workspace:*"
   }
 }
