@@ -66,7 +66,10 @@ export function LoginPage() {
           </form>
         )}
       </div>
-      <p className="auth-foot muted small">Two free posts to start. No card needed.</p>
+      <p className="auth-foot muted small">
+        Two free posts to start. No card needed. By signing in you agree to the <a href="/terms">terms</a> and{" "}
+        <a href="/privacy">privacy policy</a>.
+      </p>
     </main>
   );
 }

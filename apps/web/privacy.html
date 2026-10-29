@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy · Rankkiln</title>
+    <meta name="description" content="What Rankkiln stores about you and your sites, who it shares it with, and how to delete it." />
+    <link rel="canonical" href="https://rankkiln.hansrajsaini.com/privacy" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Geist:wght@400..700&family=Geist+Mono:wght@400..500&display=swap"
+    />
+    <link rel="stylesheet" href="/tokens.css" />
+    <link rel="stylesheet" href="/site.css" />
+    <script src="/theme.js"></script>
+  </head>
+  <body>
+    <main class="wrap narrow legal">
+      <p class="kicker mono"><a href="/">Rankkiln</a></p>
+      <h1>Privacy</h1>
+      <p class="muted">Last updated 29 October 2026</p>
+
+      <p>
+        Rankkiln is run by Hansraj Saini. This page says what the hosted service at rankkiln.hansrajsaini.com stores,
+        why, who else sees it, and how to delete it. If you self-host Rankkiln, none of this applies: your data stays
+        wherever you run it.
+      </p>
+
+      <h2>What we store</h2>
+      <ul>
+        <li><strong>Your email address</strong>, to sign you in and to send you drafts for review.</li>
+        <li>
+          <strong>Your site profiles</strong>: the address, audience, tone, keywords and facts you give each site.
+        </li>
+        <li>
+          <strong>Platform credentials</strong> (for example a WordPress application password or a Ghost Admin key),
+          so Rankkiln can save drafts on your site. They're encrypted before they're stored.
+        </li>
+        <li>
+          <strong>Google Search Console access</strong>, if you connect it: a refresh token for read-only access,
+          encrypted, and the property you choose.
+        </li>
+        <li><strong>Your own Anthropic API key</strong>, if you add one, encrypted. We show only its last four characters.</li>
+        <li>
+          <strong>What Rankkiln makes for you</strong>: topic ideas, drafts, the checks run on them, and a log of each
+          run with its model, token count and cost.
+        </li>
+        <li>
+          <strong>Billing records</strong>: your plan and the Lemon Squeezy customer and subscription ids. We never see
+          or store your card.
+        </li>
+      </ul>
+
+      <h2>Cookies and storage</h2>
+      <p>
+        One cookie keeps you signed in. It lasts 30 days, and signing out removes it. Your light or dark theme choice
+        is kept in your browser's local storage. There's no advertising or tracking cookie and no analytics script.
+      </p>
+
+      <h2>Google user data</h2>
+      <p>
+        With your permission, Rankkiln reads your Search Console search queries, impressions and positions for the
+        property you choose, and uses them only to suggest topics for that site. It doesn't sell this data, use it for
+        advertising, or use it to train AI models, and people don't read it unless you ask for support or the law
+        requires it. Rankkiln's use of information received from Google APIs adheres to the
+        <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>,
+        including the Limited Use requirements. You can disconnect Search Console for a site at any time, and you can
+        also remove access from your <a href="https://myaccount.google.com/permissions">Google account</a>.
+      </p>
+
+      <h2>Who else processes your data</h2>
+      <ul>
+        <li><strong>Cloudflare</strong> hosts the service and its database.</li>
+        <li>
+          <strong>Anthropic</strong> writes the briefs and drafts. It receives your site profile, the topic, and text
+          from your site's public pages. With your own key, the request goes to your Anthropic account.
+        </li>
+        <li><strong>Resend</strong> sends sign-in links and draft emails.</li>
+        <li><strong>Lemon Squeezy</strong> takes payments as the merchant of record.</li>
+        <li><strong>Google</strong> provides Search Console data, and autocomplete suggestions for your keywords.</li>
+        <li><strong>Your own platform</strong> (WordPress, Ghost, GitHub, Webflow, Shopify or your webhook) receives the drafts.</li>
+      </ul>
+      <p>We don't sell your data or share it with anyone else, except where the law requires it.</p>
+
+      <h2>How long we keep it</h2>
+      <p>
+        Everything stays until you delete it. Deleting a site removes its profile, credentials, Search Console access,
+        topics, runs and drafts. Deleting your account (Settings → Delete account) removes all of it and cancels your
+        subscription. Drafts already saved on your platform stay there. Lemon Squeezy keeps its own payment records,
+        as the law requires.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        You can see and edit your data in the dashboard, and delete it as described above. To ask for a copy of your
+        data, or for anything else about privacy, email
+        <a href="mailto:hello@hansrajsaini.com">hello@hansrajsaini.com</a>.
+      </p>
+
+      <h2>Changes</h2>
+      <p>If this page changes in a way that matters, we'll email you before the change takes effect.</p>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-in">
+        <span class="brand small">Rankkiln</span>
+        <span class="muted"><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

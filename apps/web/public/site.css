@@ -737,6 +737,26 @@ details p {
   gap: 12px;
 }
 
+/* Privacy and terms */
+.legal {
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+.legal h1 {
+  font-size: clamp(36px, 6vw, 52px);
+  margin-bottom: 4px;
+}
+.legal h2 {
+  font-size: 24px;
+  margin-top: 40px;
+}
+.legal ul {
+  padding-left: 20px;
+}
+.legal li + li {
+  margin-top: 8px;
+}
+
 /* 404 */
 .lost {
   min-height: 70vh;
