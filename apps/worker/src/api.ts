@@ -16,7 +16,7 @@ import {
   startLogin,
   type SessionUser,
 } from "./auth";
-import { checkoutUrl, portalUrl, readWebhook } from "./billing";
+import { cancelSubscription, checkoutUrl, portalUrl, readWebhook } from "./billing";
 import { encrypt } from "./crypto";
 import {
   all,
@@ -592,6 +592,30 @@ export function createApi(deps: Deps = defaultDeps) {
     const account = (await one<AccountRow>(c.env.DB, "SELECT * FROM accounts WHERE id = ?", c.get("user").accountId))!;
     if (!account.ls_subscription_id) throw new HttpError(400, "No subscription yet.");
     return c.json({ url: await portalUrl(c.env, account.ls_subscription_id, deps.fetch) });
+  });
+
+  // --- Account -------------------------------------------------------------------------------------------------
+
+  // Deletes the account and everything in it. The subscription is cancelled first, so nobody is billed for an
+  // account that no longer exists; if that fails, nothing is deleted.
+  app.delete("/account", async (c) => {
+    const user = c.get("user");
+    const { email } = await body<{ email?: string }>(c);
+    if (email?.trim().toLowerCase() !== user.email.toLowerCase())
+      throw new HttpError(400, "Type your email address to confirm.");
+    const account = (await one<AccountRow>(c.env.DB, "SELECT * FROM accounts WHERE id = ?", user.accountId))!;
+    if (account.ls_subscription_id)
+      await cancelSubscription(c.env, account.ls_subscription_id, deps.fetch).catch(() => {
+        throw new HttpError(409, "Couldn't cancel your subscription. Try again, or cancel it under billing first.");
+      });
+    const emails = await all<{ email: string }>(c.env.DB, "SELECT email FROM users WHERE account_id = ?", account.id);
+    // Users, sessions, sites (with their connections, tokens, topics, runs and drafts), usage and keys cascade.
+    await c.env.DB.batch([
+      ...emails.map((u) => c.env.DB.prepare("DELETE FROM login_tokens WHERE email = ?").bind(u.email)),
+      c.env.DB.prepare("DELETE FROM accounts WHERE id = ?").bind(account.id),
+    ]);
+    c.header("set-cookie", sessionCookie("", 0));
+    return c.json({ ok: true });
   });
 
   return app;

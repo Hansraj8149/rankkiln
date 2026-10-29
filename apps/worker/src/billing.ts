@@ -70,6 +70,13 @@ export async function portalUrl(env: Env, subscriptionId: string, fetchImpl: typ
   return res.data.attributes.urls.customer_portal;
 }
 
+/** Cancels a subscription straight away, for an account being deleted. One that's already gone counts as done. */
+export async function cancelSubscription(env: Env, subscriptionId: string, fetchImpl: typeof fetch = fetch) {
+  await ls(env, `/subscriptions/${subscriptionId}`, { method: "DELETE" }, fetchImpl).catch((e: Error) => {
+    if (!e.message.includes("HTTP 404")) throw e;
+  });
+}
+
 export interface SubscriptionChange {
   accountId: string;
   plan: string;

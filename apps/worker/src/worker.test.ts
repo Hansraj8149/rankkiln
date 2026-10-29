@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { FakeProvider } from "@rankkiln/llm";
 import { createApi } from "./api";
 import { decrypt, encrypt, hmacHex } from "./crypto";
-import { one } from "./db";
+import { exec, one } from "./db";
 import type { Deps } from "./run";
 import { enqueueDue, runSite } from "./run";
 import { testEnv } from "./testing";
@@ -62,6 +62,7 @@ function fakeFetch() {
     if (url.startsWith("https://hooks.acme.com"))
       return Response.json({ id: "p1", reviewUrl: "https://cms.acme.com/p1" });
     if (url.startsWith("https://suggestqueries")) return Response.json(["", []]);
+    if (url.startsWith("https://api.lemonsqueezy.com")) return Response.json({ data: {} });
     return new Response("not found", { status: 404 });
   }) as typeof fetch;
   return { impl, sent };
@@ -222,5 +223,25 @@ describe("billing webhook", () => {
     });
     expect(ok.status).toBe(200);
     expect((await json(t.call("GET", "/me"))).plan.id).toBe("growth");
+  });
+});
+
+describe("account deletion", () => {
+  it("cancels the subscription, then deletes the account and everything in it", async () => {
+    const t = setup();
+    await t.signIn();
+    const site = await json(t.call("POST", "/sites", { profile }));
+    await t.call("PUT", "/api-key", { key: "sk-ant-own-1234" });
+    await exec(t.env.DB, "UPDATE accounts SET ls_subscription_id = 'sub_1'");
+
+    expect((await t.call("DELETE", "/account", { email: "someone@else.com" })).status).toBe(400);
+    expect((await t.call("DELETE", "/account", { email: "Owner@acme.com" })).status).toBe(200);
+
+    const cancel = t.net.sent.find((s) => s.url === "https://api.lemonsqueezy.com/v1/subscriptions/sub_1")!;
+    expect(cancel).toBeDefined();
+    for (const table of ["accounts", "users", "sessions", "sites", "api_keys", "login_tokens"])
+      expect(await one(t.env.DB, `SELECT 1 FROM ${table}`)).toBeNull();
+    expect(await one(t.env.DB, "SELECT 1 FROM sites WHERE id = ?", site.id)).toBeNull();
+    expect((await t.call("GET", "/me")).status).toBe(401);
   });
 });

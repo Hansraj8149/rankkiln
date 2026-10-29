@@ -6,6 +6,7 @@ import { Button, Notice, TextField, useAction } from "../ui";
 export function SettingsPage({ me, reloadMe }: { me: Me; reloadMe: () => void }) {
   const { query } = usePath();
   const [key, setKey] = useState("");
+  const [confirm, setConfirm] = useState("");
   const action = useAction();
 
   const go = (path: string, method = "GET", body?: unknown) =>
@@ -115,6 +116,29 @@ export function SettingsPage({ me, reloadMe }: { me: Me; reloadMe: () => void })
         >
           Sign out
         </Button>
+      </section>
+
+      <section className="card form">
+        <h2 className="h3">Delete account</h2>
+        <p className="muted">
+          Deletes your sites, drafts, topics, saved platform credentials, Search Console access and API key, and cancels
+          your subscription. Drafts already on your platform stay there. This can't be undone.
+        </p>
+        <TextField label="Type your email to confirm" type="email" value={confirm} onChange={setConfirm} />
+        <div className="actions">
+          <Button
+            kind="danger"
+            disabled={confirm.trim().toLowerCase() !== me.email.toLowerCase() || action.busy}
+            onClick={() =>
+              action.run(async () => {
+                await api("DELETE", "/account", { email: confirm });
+                location.href = "/";
+              })
+            }
+          >
+            Delete my account
+          </Button>
+        </div>
       </section>
     </>
   );
