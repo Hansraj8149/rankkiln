@@ -4,7 +4,7 @@ Researched, SEO-ready blog drafts for any site. Rankkiln finds topics people alr
 your voice, checks it, and puts it on your platform as an unpublished draft. A person approves every post unless you
 switch auto-publish on.
 
-**Status:** early. The plan is in [`docs/PLAN.md`](docs/PLAN.md).
+**Status:** feature-complete, not yet deployed. The plan is in [`docs/PLAN.md`](docs/PLAN.md).
 
 ## How a run works
 
@@ -21,7 +21,8 @@ switch auto-publish on.
 
 | Path                  | What it is                                                      |
 | --------------------- | --------------------------------------------------------------- |
-| `packages/core`       | Post and site profile schemas, the pipeline                     |
+| `packages/core`       | Post and site profile schemas                                   |
+| `packages/engine`     | Draft pipeline, topic finding, profile proposal from a URL      |
 | `packages/llm`        | Model provider interface (Anthropic first, platform or own key) |
 | `packages/topics`     | Topic sources and scoring                                       |
 | `packages/lint`       | SEO and honesty checks                                          |
@@ -35,13 +36,53 @@ switch auto-publish on.
 ```bash
 pnpm install
 cp .env.example .env                                  # set ANTHROPIC_API_KEY
-cp rankkiln.config.example.ts rankkiln.config.ts      # describe your site
-pnpm rankkiln sites
+pnpm rankkiln init --url https://your-site.com        # proposes a profile; paste it into the config
+cp rankkiln.config.example.ts rankkiln.config.ts      # describe your site and pick a target
+pnpm rankkiln verify --site acme                      # checks the platform credentials
+pnpm rankkiln topics --site acme                      # ranked topic ideas
 pnpm rankkiln draft --site acme --topic "how far an e-bike goes on one charge" --dry-run
+pnpm rankkiln run --site acme                         # drafts the best new topic and sends it
 ```
 
 The draft is saved to `out/<site>/<slug>.md` (and `.json` with the brief and checks). Without `--dry-run`, it is also
-sent to the site's `target` as an unpublished draft.
+sent to the site's `target` as an unpublished draft. For Search Console topics, create a Google OAuth client of type
+"Desktop app", put its id and secret in `.env`, run `pnpm rankkiln gsc-login` once, and set `searchConsole.property`.
+
+### Targets
+
+| Platform  | What a draft is                             | Secret (`tokenEnv`)                     |
+| --------- | ------------------------------------------- | --------------------------------------- |
+| webhook   | `POST {event: "draft.created", post}`       | optional bearer token                   |
+| wordpress | a post with status `draft`                  | an application password                 |
+| ghost     | a draft post (HTML source)                  | an Admin API key                        |
+| github    | a draft pull request adding `<slug>.md(x)`  | a fine-grained token for that repo      |
+| webflow   | a CMS item with `isDraft`                   | a site API token with CMS read/write    |
+| shopify   | an unpublished blog article with SEO fields | an Admin API token (read/write_content) |
+
+A webhook endpoint answers `{id, reviewUrl}` to `draft.created`, anything 2xx to `ping` and `draft.approved`, and can
+offer a `listUrl` that returns `[{url, title, slug}]`.
+
+## Hosted (Cloudflare)
+
+`apps/worker` is the API, the hourly cron and the queue consumer; it also serves `apps/web` (the marketing page and the
+dashboard at `/app`).
+
+```bash
+cd apps/worker
+npx wrangler d1 create rankkiln                 # put the id in wrangler.jsonc
+npx wrangler queues create rankkiln-runs
+npx wrangler queues create rankkiln-runs-dlq
+pnpm db:migrate
+npx wrangler secret put ANTHROPIC_API_KEY       # and the other secrets listed at the end of wrangler.jsonc
+pnpm deploy
+```
+
+Locally: copy `.dev.vars.example` to `.dev.vars` (`RESEND_API_KEY=log` prints sign-in links to the terminal), run
+`pnpm db:migrate:local` and `pnpm dev`, and open http://localhost:8787.
+
+Billing is Lemon Squeezy: create one subscription product with a variant per plan (`starter`, `growth`, `byok`), put
+`{"starter":"<variant id>",…}` in `LEMONSQUEEZY_VARIANTS`, and point a webhook for the `subscription_*` events at
+`/api/billing/webhook`. Plan limits live in `apps/worker/src/plans.ts`.
 
 ## Develop
 
