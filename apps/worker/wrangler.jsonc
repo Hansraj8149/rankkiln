@@ -1,0 +1,40 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "rankkiln",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // Marketing site and dashboard, built by apps/web. /api/* and /app/* reach the Worker first.
+  "assets": {
+    "directory": "../web/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*", "/app", "/app/*"],
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rankkiln",
+      // From `wrangler d1 create rankkiln`
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "queues": {
+    "producers": [{ "binding": "RUNS", "queue": "rankkiln-runs" }],
+    "consumers": [
+      { "queue": "rankkiln-runs", "max_batch_size": 1, "max_retries": 2, "dead_letter_queue": "rankkiln-runs-dlq" },
+    ],
+  },
+  // Every hour: queue the sites whose next run is due.
+  "triggers": { "crons": ["0 * * * *"] },
+  "observability": { "enabled": true },
+  "vars": {
+    "APP_URL": "https://rankkiln.com",
+    "RANKKILN_MODEL": "claude-opus-5-5",
+    "LEMONSQUEEZY_VARIANTS": "{}",
+  },
+  // Secrets (wrangler secret put): ANTHROPIC_API_KEY, RESEND_API_KEY, RANKKILN_FROM_EMAIL, RANKKILN_ENCRYPTION_KEY,
+  // GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, LEMONSQUEEZY_API_KEY, LEMONSQUEEZY_STORE_ID,
+  // LEMONSQUEEZY_WEBHOOK_SECRET
+}

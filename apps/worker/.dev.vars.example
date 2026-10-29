@@ -1,0 +1,14 @@
+# Copy to .dev.vars for `pnpm --filter @rankkiln/worker dev`. Never commit .dev.vars.
+APP_URL=http://localhost:8787
+ANTHROPIC_API_KEY=
+# "log" prints sign-in links and notifications to the terminal instead of sending them
+RESEND_API_KEY=log
+RANKKILN_FROM_EMAIL=Rankkiln <hello@rankkiln.com>
+# openssl rand -base64 32
+RANKKILN_ENCRYPTION_KEY=
+GOOGLE_OAUTH_CLIENT_ID=
+GOOGLE_OAUTH_CLIENT_SECRET=
+LEMONSQUEEZY_API_KEY=
+LEMONSQUEEZY_STORE_ID=
+LEMONSQUEEZY_WEBHOOK_SECRET=
+LEMONSQUEEZY_VARIANTS={}
