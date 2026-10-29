@@ -30,7 +30,7 @@
   "triggers": { "crons": ["0 * * * *"] },
   "observability": { "enabled": true },
   "vars": {
-    "APP_URL": "https://rankkiln.com",
+    "APP_URL": "https://rankkiln.hansrajsaini.com",
     "RANKKILN_MODEL": "claude-opus-5-5",
     "LEMONSQUEEZY_VARIANTS": "{}",
   },

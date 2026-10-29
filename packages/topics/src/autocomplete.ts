@@ -6,7 +6,7 @@ const MODIFIERS = ["", "how", "what", "why", "best", "vs", "for", "cost", "witho
 
 export async function suggest(q: string, lang = "en", fetchImpl: typeof fetch = fetch): Promise<string[]> {
   const url = `https://suggestqueries.google.com/complete/search?client=firefox&hl=${lang}&q=${encodeURIComponent(q)}`;
-  const res = await fetchImpl(url, { headers: { "user-agent": "RankkilnBot/0.1 (+https://rankkiln.com)" } });
+  const res = await fetchImpl(url, { headers: { "user-agent": "RankkilnBot/0.1 (+https://rankkiln.hansrajsaini.com)" } });
   if (!res.ok) throw new Error(`Autocomplete answered HTTP ${res.status}.`);
   const body = (await res.json()) as [string, string[]];
   return body[1] ?? [];

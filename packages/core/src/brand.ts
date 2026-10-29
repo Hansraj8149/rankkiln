@@ -2,5 +2,5 @@
 export const PRODUCT = {
   name: "Rankkiln",
   slug: "rankkiln",
-  url: "https://rankkiln.com",
+  url: "https://rankkiln.hansrajsaini.com",
 } as const;

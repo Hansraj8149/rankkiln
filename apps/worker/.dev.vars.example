@@ -3,7 +3,7 @@ APP_URL=http://localhost:8787
 ANTHROPIC_API_KEY=
 # "log" prints sign-in links and notifications to the terminal instead of sending them
 RESEND_API_KEY=log
-RANKKILN_FROM_EMAIL=Rankkiln <hello@rankkiln.com>
+RANKKILN_FROM_EMAIL=Rankkiln <hello@hansrajsaini.com>
 # openssl rand -base64 32
 RANKKILN_ENCRYPTION_KEY=
 GOOGLE_OAUTH_CLIENT_ID=

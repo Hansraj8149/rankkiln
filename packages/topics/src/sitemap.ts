@@ -13,7 +13,7 @@ export function titleFromUrl(url: string): string {
 /** Every page in a sitemap, following one level of sitemap index. */
 export async function readSitemap(url: string, fetchImpl: typeof fetch = fetch): Promise<ExistingPage[]> {
   const get = async (u: string) => {
-    const res = await fetchImpl(u, { headers: { "user-agent": "RankkilnBot/0.1 (+https://rankkiln.com)" } });
+    const res = await fetchImpl(u, { headers: { "user-agent": "RankkilnBot/0.1 (+https://rankkiln.hansrajsaini.com)" } });
     if (!res.ok) throw new Error(`Couldn't read ${u} (HTTP ${res.status}).`);
     return res.text();
   };

@@ -3,7 +3,7 @@ import { siteProfileSchema, type SiteProfile } from "@rankkiln/core";
 import type { LlmProvider, Usage } from "@rankkiln/llm";
 import { readSitemap, type ExistingPage } from "@rankkiln/topics";
 
-const UA = { "user-agent": "RankkilnBot/0.1 (+https://rankkiln.com)" };
+const UA = { "user-agent": "RankkilnBot/0.1 (+https://rankkiln.hansrajsaini.com)" };
 
 /** The readable parts of an HTML page: title, description, headings and paragraphs, capped in length. */
 export function pageText(html: string, max = 6000): string {

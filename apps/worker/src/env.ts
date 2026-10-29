@@ -10,7 +10,7 @@ export interface Env {
   RUNS: Queue<RunMessage>;
   ASSETS: Fetcher;
 
-  /** Public address of the app, e.g. https://rankkiln.com. Used in emails and OAuth redirects. */
+  /** Public address of the app, e.g. https://rankkiln.hansrajsaini.com. Used in emails and OAuth redirects. */
   APP_URL: string;
   /** Platform key for plans that include posts. */
   ANTHROPIC_API_KEY: string;
