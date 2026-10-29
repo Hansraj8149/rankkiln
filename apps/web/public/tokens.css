@@ -1,0 +1,174 @@
+/* Design tokens shared by the marketing site and the dashboard. Theme: system by default; data-theme on <html>
+   ("light" | "dark") overrides it. */
+
+:root {
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 20px;
+
+  /* Light: warm paper and ink, an ember accent. */
+  --bg: #f8f5ef;
+  --bg-2: #f1ece3;
+  --surface: #fffdf9;
+  --surface-2: #f6f2ea;
+  --fg: #1a1611;
+  --fg-2: #4a4339;
+  --muted: #7a7166;
+  --line: #e6dfd3;
+  --line-2: #d8cfc0;
+  --accent: #d9480f;
+  --accent-2: #f76707;
+  --accent-soft: #fde8dc;
+  --accent-fg: #ffffff;
+  --ring: rgba(217, 72, 15, 0.35);
+  --ok: #2b7a4b;
+  --ok-soft: #e1f2e7;
+  --warn: #9a6200;
+  --warn-soft: #fbefd3;
+  --bad: #b42318;
+  --bad-soft: #fde4e1;
+  --serp-title: #1a0dab;
+  --serp-url: #4d5156;
+  --shadow: 0 1px 2px rgba(26, 22, 17, 0.05), 0 8px 24px -12px rgba(26, 22, 17, 0.12);
+  --shadow-lg: 0 2px 4px rgba(26, 22, 17, 0.04), 0 24px 64px -24px rgba(26, 22, 17, 0.25);
+  --glow: radial-gradient(60% 50% at 50% 0%, rgba(247, 103, 7, 0.14), transparent 70%);
+  color-scheme: light;
+}
+
+/* Dark: charcoal with a warm cast, the ember glows. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e0c0a;
+    --bg-2: #14110e;
+    --surface: #18150f;
+    --surface-2: #1f1b15;
+    --fg: #f3eee6;
+    --fg-2: #cfc6b8;
+    --muted: #8f8676;
+    --line: #2a251e;
+    --line-2: #3a3329;
+    --accent: #ff6b2c;
+    --accent-2: #ff9447;
+    --accent-soft: #3a1d0f;
+    --accent-fg: #160b05;
+    --ring: rgba(255, 107, 44, 0.45);
+    --ok: #6fd69a;
+    --ok-soft: #12301f;
+    --warn: #f4c063;
+    --warn-soft: #33270f;
+    --bad: #ff8a7a;
+    --bad-soft: #3b1714;
+    --serp-title: #8ab4f8;
+    --serp-url: #bdc1c6;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.3), 0 24px 64px -24px rgba(0, 0, 0, 0.8);
+    --glow: radial-gradient(60% 50% at 50% 0%, rgba(255, 107, 44, 0.18), transparent 70%);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e0c0a;
+  --bg-2: #14110e;
+  --surface: #18150f;
+  --surface-2: #1f1b15;
+  --fg: #f3eee6;
+  --fg-2: #cfc6b8;
+  --muted: #8f8676;
+  --line: #2a251e;
+  --line-2: #3a3329;
+  --accent: #ff6b2c;
+  --accent-2: #ff9447;
+  --accent-soft: #3a1d0f;
+  --accent-fg: #160b05;
+  --ring: rgba(255, 107, 44, 0.45);
+  --ok: #6fd69a;
+  --ok-soft: #12301f;
+  --warn: #f4c063;
+  --warn-soft: #33270f;
+  --bad: #ff8a7a;
+  --bad-soft: #3b1714;
+  --serp-title: #8ab4f8;
+  --serp-url: #bdc1c6;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.3), 0 24px 64px -24px rgba(0, 0, 0, 0.8);
+  --glow: radial-gradient(60% 50% at 50% 0%, rgba(255, 107, 44, 0.18), transparent 70%);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Theme switch: three small buttons (system, light, dark). */
+.theme-switch {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.theme-switch button {
+  all: unset;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  color: var(--muted);
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.theme-switch button:hover {
+  color: var(--fg);
+}
+.theme-switch button[aria-pressed="true"] {
+  background: var(--surface-2);
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+.theme-switch button:focus-visible {
+  outline: 2px solid var(--accent);
+}
+.theme-switch svg {
+  width: 15px;
+  height: 15px;
+}
