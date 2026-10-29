@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readSitemap, similarPages, titleFromUrl } from "./index";
+import { expandSeeds, rankTopics, readSitemap, similarPages, titleFromUrl } from "./index";
 
 describe("sitemap", () => {
   it("follows a sitemap index and derives titles", async () => {
@@ -35,5 +35,62 @@ describe("similarPages", () => {
   });
   it("ignores unrelated pages", () => {
     expect(similarPages("Hiring a React Native developer", pages)).toEqual([]);
+  });
+});
+
+describe("rankTopics", () => {
+  const row = (query: string, impressions: number, position: number, page = "https://x.com/") => ({
+    query,
+    page,
+    clicks: 0,
+    impressions,
+    position,
+  });
+
+  it("puts near-miss Search Console queries first and skips branded, top-ranking and buried ones", () => {
+    const topics = rankTopics(
+      {
+        queries: [
+          row("hansraj saini", 900, 1.2),
+          row("lovable app security audit", 300, 9),
+          row("supabase rls mistakes", 120, 22),
+          row("react native developer india", 500, 3),
+          row("vibe coding", 2000, 60),
+        ],
+        suggestions: ["how to secure a supabase app"],
+      },
+      { brandTerms: ["Hansraj Saini"] },
+    );
+    expect(topics.map((t) => t.query)).toEqual([
+      "lovable app security audit",
+      "supabase rls mistakes",
+      "how to secure a supabase app",
+    ]);
+    expect(topics[0]).toMatchObject({ source: "search-console", score: 290, action: "new" });
+  });
+
+  it("marks a query an existing page covers as a refresh, and merges near-duplicates", () => {
+    const topics = rankTopics({
+      manual: ["supabase security checklist"],
+      suggestions: ["supabase security checklist lovable", "lovable supabase security checklist"],
+      pages: [{ title: "Lovable Supabase security checklist", path: "/journal/lovable-supabase-security-checklist" }],
+    });
+    expect(topics).toEqual([
+      expect.objectContaining({ query: "supabase security checklist", action: "refresh", source: "manual" }),
+    ]);
+  });
+});
+
+describe("expandSeeds", () => {
+  it("collects suggestions for each seed and question word", async () => {
+    const fake = (async (u: string) => {
+      const q = new URL(u).searchParams.get("q")!;
+      return Response.json([q, [`${q} guide`, "E-bike Range", "rls go away"]]);
+    }) as typeof fetch;
+    const out = await expandSeeds(["e-bike range"], "en", fake);
+    expect(out).not.toContain("rls go away");
+    expect(out).toContain("how e-bike range guide");
+    expect(out).not.toContain("e-bike range");
+    expect(new Set(out).size).toBe(out.length);
   });
 });
