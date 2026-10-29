@@ -1,20 +1,27 @@
 import type { z } from "zod";
+import type { ConnectorSpec } from "@rankkiln/connectors";
 import type { siteProfileSchema } from "@rankkiln/core";
 
 export type SiteProfileInput = z.input<typeof siteProfileSchema>;
 
-export interface WebhookTarget {
-  type: "webhook";
-  url: string;
-  /** Name of the environment variable that holds the bearer token. Keep tokens out of the config file. */
-  tokenEnv?: string;
-  listUrl?: string;
-}
+type WithoutToken<T> = T extends unknown ? Omit<T, "token"> : never;
+
+/**
+ * Where drafts go: any connector's settings, minus the secret. `tokenEnv` names the environment variable that holds
+ * it (a webhook token, WordPress application password, Ghost Admin key or API token). Keep secrets out of the
+ * config file.
+ */
+export type Target = WithoutToken<ConnectorSpec> & { tokenEnv?: string };
+
+/** @deprecated Use Target with type "webhook". */
+export type WebhookTarget = Extract<Target, { type: "webhook" }>;
 
 export interface SiteConfig {
   profile: SiteProfileInput;
   /** Where drafts go. Without one, drafts are only written to the output folder. */
-  target?: WebhookTarget;
+  target?: Target;
+  /** Search Console property, e.g. "sc-domain:acme.com" or "https://acme.com/". Needs GOOGLE_* in .env. */
+  searchConsole?: { property: string };
 }
 
 export interface RankkilnConfig {
